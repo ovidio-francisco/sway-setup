@@ -1,0 +1,28 @@
+#!/bin/sh
+
+case "$1" in
+    up)   pamixer -i 5 ;;
+    down) pamixer -d 5 ;;
+    mute) pamixer -t ;;
+    *) exit 1 ;;
+esac
+
+# Refresh i3blocks
+pkill -RTMIN+1 i3blocks
+
+vol=$(pamixer --get-volume)
+mute=$(pamixer --get-mute)
+
+if [ "$mute" = "true" ]; then
+    notify-send \
+        -a volume \
+        -h string:x-canonical-private-synchronous:volume \
+        -h int:value:0 \
+        "Volume" "Muted"
+else
+    notify-send \
+        -a volume \
+        -h string:x-canonical-private-synchronous:volume \
+        -h int:value:"$vol" \
+        "Volume" "$vol%"
+fi

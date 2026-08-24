@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Set keyboard layout by machine at i3 startup
+
+# Wait for X session to be fully ready
+sleep 1
+
+# Only apply on MacBooks
+if grep -q "MacBook" /sys/class/dmi/id/product_name; then
+  setxkbmap -layout us -variant mac
+fi

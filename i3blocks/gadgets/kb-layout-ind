@@ -1,0 +1,10 @@
+#!/bin/bash
+
+layout=$(swaymsg -t get_inputs | jq -r \
+  '.[] | select(.type == "keyboard") | .xkb_active_layout_name' | head -n1)
+
+if [[ "$layout" == "Portuguese (Brazil)" ]]; then
+    echo "br"
+else
+    echo "us"
+fi

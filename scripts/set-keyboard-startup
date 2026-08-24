@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -n "$2" ]; then
+	variant=" -variant $2"
+fi
+
+
+# Wait for X session to be fully ready
+sleep 1
+
+setxkbmap -layout $1$variant
+
+

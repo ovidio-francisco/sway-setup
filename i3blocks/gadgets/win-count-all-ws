@@ -1,0 +1,32 @@
+#!/usr/bin/env python3
+
+import i3ipc
+import sys
+
+i3 = i3ipc.Connection()
+
+def printwincount(i3, e):
+    #  icon = "🗖"
+    #  icon = ""
+    icon = ''
+
+    l = i3.get_tree().leaves()
+
+    #  dot = '<span foreground="#000000">.</span>'
+    dot = ''
+    print(f"{icon}{dot}{len(l)}")
+    sys.stdout.flush()
+
+
+printwincount(i3, None)
+i3.on('window::new', printwincount)
+i3.on('window::close', printwincount)
+
+i3.main()
+
+#  
+#  	
+#  🪟
+#  🗔
+#  🗖
+#  🗗

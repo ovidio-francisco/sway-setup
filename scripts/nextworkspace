@@ -1,0 +1,9 @@
+#!/bin/bash
+
+array=$(i3-msg -t get_workspaces | tr , '\n' | grep '"num":' | cut -d : -f 2)
+
+number=$(echo "${array[@]}" | awk -v RS='\\s+' '{ a[$1] } END { for(i = 1; i in a; ++i); print i }')
+
+echo $number
+
+# https://www.reddit.com/r/i3wm/comments/460ggx/can_i_have_i3_always_display_virtual_desktops_17/

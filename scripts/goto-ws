@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# next=`/home/gowl/Storage/.scripts/i3/next-workspace-in-grid $1 $2 $3`
+# next=`./next-workspace-in-grid $1 $2 $3`
+next=`~/.config/i3/scripts/next-workspace-in-grid $1 $2 $3`
+echo $next
+i3-msg workspace number $next
+
+pkill -SIGRTMIN+10 i3blocks
+
+

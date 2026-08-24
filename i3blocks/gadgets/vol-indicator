@@ -1,0 +1,75 @@
+#!/bin/bash
+
+notify=false
+
+# case "$1" in
+    # up)
+        # pamixer -i 5
+        # notify=true
+        # ;;
+    # down)
+        # pamixer -d 5
+        # notify=true
+        # ;;
+    # mute)
+        # pamixer -t
+        # notify=true
+        # ;;
+# esac
+
+# Mouse wheel on i3blocks
+case "$BLOCK_BUTTON" in
+    4)
+        pamixer -i 5
+        notify=true
+        ;;
+    5)
+        pamixer -d 5
+        notify=true
+        ;;
+    1)
+        pamixer -t
+        notify=true
+        ;;
+esac
+
+
+mute=$(pamixer --get-mute)
+vol=$(pamixer --get-volume)
+
+volume_off=""    # U+F026
+volume_low=""    # U+F027
+volume_high=""   # U+F028
+volume_mute=""   # U+F6A9
+
+
+if [ "$mute" = "true" ]; then
+    icon=$volume_mute
+    notification="$icon Muted"
+else
+    if [ "$vol" -lt 25 ]; then
+        icon=$volume_off
+    elif [ "$vol" -lt 50 ]; then
+        icon=$volume_low
+    else
+        icon=$volume_high
+    fi
+
+
+    notification="$icon $vol%"
+fi
+
+
+# Output for i3blocks
+echo "$icon"
+
+
+# If this was only an i3blocks refresh/startup, stop here.
+[ "$notify" = false ] && exit
+
+
+notify-send \
+    -t 1800 \
+    -h string:x-canonical-private-synchronous:volume \
+    -h int:value:"$vol" \
+    "Volume $notification" 

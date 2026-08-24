@@ -1,0 +1,70 @@
+#!/bin/bash
+# Copyright (C) 2014 Alexander Keller <github@nycroth.com>
+
+case "$BLOCK_BUTTON" in
+    1|2|3)
+		urxvt -e nmtui
+esac
+
+#------------------------------------------------------------------------
+if [[ -z "$INTERFACE" ]] ; then
+    # INTERFACE="${BLOCK_INSTANCE:-wlan0}"
+	INTERFACE="${BLOCK_INSTANCE:-wlp2s0}"
+fi
+#------------------------------------------------------------------------
+
+# As per #36 -- It is transparent: e.g. if the machine has no battery or wireless
+# connection (think desktop), the corresponding block should not be displayed.
+[[ ! -d /sys/class/net/${INTERFACE}/wireless ]] && exit
+
+# If the wifi interface exists but no connection is active, "down" shall be displayed.
+if [[ "$(cat /sys/class/net/$INTERFACE/operstate)" = 'down' ]]; then
+    echo "down"
+    echo "down"
+    echo "#FF0000"
+    exit
+fi
+
+#------------------------------------------------------------------------
+
+QUALITY=$(grep $INTERFACE /proc/net/wireless | awk '{ print int($3 * 100 / 70) }')
+
+#------------------------------------------------------------------------
+
+# color
+color="#ffffff"
+
+if [[ $QUALITY -lt 90 ]]; then
+	color="#d3d3d3"
+elif [[ $QUALITY -lt 80 ]]; then
+	color="#c0c0c0"
+elif [[ $QUALITY -lt 70 ]]; then
+	color="#a9a9a9"
+elif [[ $QUALITY -lt 60 ]]; then
+	color="#696969"
+elif [[ $QUALITY -lt 50 ]]; then
+	color="#708090"
+elif [[ $QUALITY -lt 40 ]]; then
+	color="#2f4f4f"
+elif [[ $QUALITY -lt 30 ]]; then
+	color="#ffae00"
+elif [[ $QUALITY -lt 20 ]]; then
+	color="#fff600"
+elif [[ $QUALITY -lt 10 ]]; then
+	color="#ff0000"
+else
+	color="#FFFFFF"
+fi
+
+echo -n "<span color='$color'></span>"
+
+# echo $QUALITY% # full text
+# echo $QUALITY% # short text
+
+
+
+
+# echo "#00FF00"
+# echo "#FFF600"
+# echo "#FFAE00"
+# echo "#FF0000"

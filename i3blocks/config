@@ -1,0 +1,82 @@
+
+#    _ _____   ____  _            _                           __ _
+#   (_)___ /  | __ )| | ___   ___| | _____    ___ ___  _ __  / _(_) __ _
+#   | | |_ \  |  _ \| |/ _ \ / __| |/ / __|  / __/ _ \| '_ \| |_| |/ _` |
+#   | |___) | | |_) | | (_) | (__|   <\__ \ | (_| (_) | | | |  _| | (_| |
+#   |_|____/  |____/|_|\___/ \___|_|\_\___/  \___\___/|_| |_|_| |_|\__, |
+#                                                                  |___/
+
+
+
+command=$HOME/.config/sway/i3blocks/gadgets/$BLOCK_NAME
+
+separator_block_width=15
+markup=pango
+
+
+[win-title]
+interval=persist
+
+
+[capslock]
+signal=11
+interval=once 
+
+
+[cpu-usage]
+interval=persist
+# separator=false
+# separator_block_width=23
+min_width=12
+
+
+
+[ws-display]
+interval=persist
+# separator=false
+# separator_block_width=4 
+
+# [win-count-all-ws]
+# interval=persist
+
+
+
+[kb-layout-ind]
+signal=12
+interval=once 
+min_width=13
+
+
+
+[net-ind]
+interval=4
+signal=13
+align=center
+separator=false
+separator_block_width=7 
+# min_width=12
+
+
+[bat-ind]
+interval=10
+separator=false
+separator_block_width=5 
+
+
+[vol-indicator]
+interval=once
+signal=1 
+min_width=12
+align=center
+
+
+[date-time]
+interval=5
+
+
+[shutdown_menu]
+full_text=⏻
+
+
+
+

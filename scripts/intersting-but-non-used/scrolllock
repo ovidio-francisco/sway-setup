@@ -1,0 +1,6 @@
+#!/bin/bash
+srl=$(xset -q | grep Caps | awk '{print $12}') 
+
+if [ $srl = 'on' ]; then
+	echo "<span color='#ff0000'>SCROLL</span>"
+fi

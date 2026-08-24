@@ -1,0 +1,80 @@
+#!/bin/bash
+
+wid=$1
+heg=$2
+dir=$3
+dim=2
+
+getFocusedWorkspace() {
+	ws=$(i3-msg -t get_workspaces | sed 's/},{/\n/g' | grep 'focused":true' | cut -d, -f2 | cut -d: -f2)
+echo $ws 
+}
+
+getCol() {
+	echo $(( ($ws-1)%$wid + 1)) # The column is the previous index plus 1
+}
+
+getRow() {
+	ceiling=$((($ws + $wid - 1) / $wid )) # a trick to get the ceil function
+	echo $ceiling
+}
+
+next1right() {
+
+	col=$(getCol)
+
+	case $col in 
+		$wid) next=$(( $wid*($(getRow)-1) +1 )) ;; 
+		*)    next=$(expr $ws + 1) ;;
+	esac
+	echo $next
+}
+
+next1left() {
+	col=$(getCol)
+
+	case $col in 
+		1)    next=$(( $wid*$(getRow) ));;
+		*)    next=$(expr $ws - 1) ;;
+	esac
+	echo $next
+}
+
+next1down() {
+	
+	row=$(getRow) 
+
+	case $row in 
+		$heg) next=$(getCol);;
+		*)    next=$(expr $ws + $wid) ;;
+	esac
+	echo $next
+}
+
+next1up() {
+
+	row=$(getRow)
+
+	case $row in 
+		1) next=$(( $wid*($heg-1) + $(getCol) )) ;;
+		*) next=$(expr $ws - $wid) ;;
+	esac
+	echo $next
+}
+
+nextWorkspace() {
+	case $dir in
+		up   |↑) next=$(next1up) ;;
+		dow  |↓) next=$(next1down) ;;
+		right|→) next=$(next1right) ;;
+		left |←) next=$(next1left) ;;
+	esac
+	
+	echo $next
+}
+
+ws=$(getFocusedWorkspace) 
+echo $(nextWorkspace)
+
+
+# https://stackoverflow.com/questions/2395284/round-a-divided-number-in-bash

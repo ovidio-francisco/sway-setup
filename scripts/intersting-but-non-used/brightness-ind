@@ -1,0 +1,37 @@
+#!/bin/bash 
+
+
+if [[ "${BLOCK_BUTTON}" -eq 4 ]]; then
+	xbacklight -inc 10
+elif [[ "${BLOCK_BUTTON}" -eq 5 ]]; then
+	xbacklight -dec 10
+fi 
+
+echo "<span color='white'></span>" 
+
+
+len=20
+bri=$(printf '%.1f' $(xbacklight -get))
+
+thickChar='▰'
+thinChar='▱' 
+
+thickLen=$( printf '%.0f' $(echo "scale=2; $len * ($bri/100)" | bc ) )
+thinLen=$( echo "$len-$thickLen" | bc ) 
+
+
+for (( i=0; i<$thickLen; i++ )); do 
+	thick=$thick$thickChar 
+done
+
+for (( i=0; i<$thinLen; i++ )); do 
+	thin=$thin$thinChar 
+done
+
+bar=$thick$thin 
+icon=''
+notification="$icon $bri%"
+
+dunstify --replace=1 -t 1800 "Brightness $notification" $bar
+
+

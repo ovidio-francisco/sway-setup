@@ -1,0 +1,57 @@
+#!/bin/bash
+
+read file used pcent totl avab<<< "$(df -h / --output=file,used,pcent,size,avail | tail -1)" 
+# o sinal <<< usa a variável de ambienet IFS como delimitador para cortar o texto e atribuir nas variaveis
+
+
+icon=''
+
+
+pcent=${pcent//%}  # o //% remove o sinal %  
+
+
+if   [ $pcent -ge 90 ]; then
+	color='red'
+elif [ $pcent -ge 80 ]; then
+	color='orange'
+elif [ $pcent -ge 75 ]; then
+	color='dark cyan'
+else
+	color='white'
+fi
+
+
+text="<span color='$color'>$icon</span>"	
+
+
+tFile="<span color='white'>$file</span>"
+tUsed="<span color='white'>$used</span>"
+
+
+
+
+
+
+
+
+
+
+
+
+case "$BLOCK_BUTTON" in
+	1) 
+	   text=$text" "$tFile" "$tUsed;;
+	3) 
+	   nFile="File:     "$file"\n"
+	   nUsed="Used:     "$used"\n"
+	   nTotl="Total:    "$totl"\n"
+	   nAvab="Availabe: "$avab"\n"
+	   
+	   notify=" \n"$nFile$nUsed$nAvab$nTotl
+	   dunstify --replace=2 -t 16000 "Storage: " "$notify" ;;
+esac
+
+
+
+echo $text
+

@@ -1,0 +1,510 @@
+#     ____                                        __ _
+#    / ___|_      ____ _ _   _    ___ ___  _ __  / _(_) __ _
+#    \___ \ \ /\ / / _` | | | |  / __/ _ \| '_ \| |_| |/ _` |
+#     ___) \ V  V / (_| | |_| | | (_| (_) | | | |  _| | (_| |
+#    |____/ \_/\_/ \__,_|\__, |  \___\___/|_| |_|_| |_|\__, |
+#                        |___/                         |___/
+
+
+
+# autostarts
+output * bg ~/.config/wallpapers/theWallpaper fill
+exec ~/.config/sway/scripts/set-keyboard-startup us_hacked
+exec wl-paste --type text --watch cliphist store
+
+exec_always sh -c 'dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK; systemctl --user start mako.service'
+exec_always sh -c 'sleep 1; pkill -RTMIN+12 i3blocks' # initialize keyboard indicator
+exec brightnessctl set 25%
+
+input type:keyboard {
+    xkb_layout br,us
+    xkb_options lv3:rwin_switch  
+}
+
+input type:touchpad {
+    tap enabled
+    # drag enabled
+    # drag_lock disabled
+
+	natural_scroll disabled
+
+    scroll_method two_finger
+
+    click_method clickfinger
+    tap_button_map lrm
+    clickfinger_button_map lrm
+
+    dwt enabled
+
+    pointer_accel 0.3
+}
+
+
+################################
+# Set some variables and configs
+################################
+
+
+set $i3scripts ~/.config/sway/scripts
+set $gadgets   ~/.config/sway/i3blocks/gadgets
+
+set $sup Mod4 
+set $mod Mod4 
+set $alt Mod1 
+
+
+workspace_auto_back_and_forth yes
+focus_follows_mouse no
+
+# Font for window titles. 
+font pango:DejaVu Sans 8
+
+
+# border gap width
+default_border pixel 0
+default_floating_border pixel 0
+
+# Set inner/outer gaps
+set $default_inner_gap 7
+gaps inner $default_inner_gap
+gaps outer 0
+
+
+set $rofi-theme -theme ojf
+
+
+
+# class                 border  backgr. text    indicator child_border
+client.focused          #4c7899 #285577 #ffffff #4c7899   #285577
+client.focused_inactive #333333 #5f676a #ffffff #484e50   #5f676a
+client.unfocused        #333333 #222222 #888888 #292d2e   #222222
+client.urgent           #2f343a #900000 #ffffff #900000   #900000
+
+
+
+
+
+###################
+# The nice keybinds
+###################
+
+
+bindsym $sup+b bar mode toggle
+
+
+
+################################################################################
+#                                   Windows                                     
+################################################################################
+
+
+# split in vertical orientation
+bindsym $sup+v split v
+
+# split in horizontal orientation
+bindsym $sup+Shift+v split h
+
+# Make the currently focused window a scratchpad
+bindsym $alt+Shift+BackSpace move scratchpad
+bindsym $alt+Shift+Escape    move scratchpad
+
+# Show the first scratchpad window
+bindsym $alt+BackSpace scratchpad show
+
+# The middle button and a modifer over any part of the window kills the window
+bindsym --whole-window $alt+Shift+button2 kill
+
+# The side buttons move the window around
+bindsym button9 move left
+bindsym button8 move right
+
+
+# The right button toggles floating
+bindsym --whole-window $alt+button2 floating toggle
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $sup
+
+# kill focused window
+bindsym $sup+Shift+q   kill
+bindsym $sup+F4        kill
+
+# change focus
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+bindsym $sup+y focus left
+bindsym $sup+u focus down
+bindsym $sup+i focus up
+bindsym $sup+o focus right
+
+
+# move focused window
+bindsym $sup+Shift+h move left
+bindsym $sup+Shift+j move down
+bindsym $sup+Shift+k move up
+bindsym $sup+Shift+l move right
+
+
+# enter fullscreen mode for the focused container
+bindsym $sup+f fullscreen toggle
+
+# toggle tiling / floating
+bindsym $sup+space floating toggle ;  move position center
+
+# change focus between tiling / floating windows
+bindsym Ctrl+Shift+space focus mode_toggle
+
+# focus the parent container
+bindsym $sup+Shift+a focus parent
+
+# focus the child container
+bindsym $sup+Shift+d focus child
+
+# change container layout (stacked, tabbed, toggle split)
+# - toggle:  alternate between the layouts
+# - default: changes to tilling
+bindsym $sup+Shift+s layout stacking
+bindsym $sup+Shift+t layout tabbed
+bindsym $sup+Shift+e layout toggle split
+bindsym $sup+Shift+p layout toggle                   
+bindsym $sup+Shift+w layout default                  
+
+# move focus
+bindsym $sup+Tab          focus next 
+bindsym $sup+Shift+Tab    focus left 
+
+# Gaps
+bindsym $sup+F12       gaps inner current set 0
+bindsym $sup+Shift+F12 gaps inner current set $default_inner_gap
+
+
+bindsym $alt+F5 border none
+
+
+################################################################################
+##################                 Workspaces                 ##################
+################################################################################
+
+
+
+# switch to workspace
+bindsym $sup+1 workspace number 1
+bindsym $sup+2 workspace number 2
+bindsym $sup+3 workspace number 3
+bindsym $sup+4 workspace number 4
+bindsym $sup+5 workspace number 5
+bindsym $sup+6 workspace number 6
+bindsym $sup+7 workspace number 7
+bindsym $sup+8 workspace number 8
+bindsym $sup+9 workspace number 9
+
+# move focused container to workspace
+bindsym $alt+Shift+1 move container to workspace 1
+bindsym $alt+Shift+2 move container to workspace 2
+bindsym $alt+Shift+3 move container to workspace 3
+bindsym $alt+Shift+4 move container to workspace 4
+bindsym $alt+Shift+5 move container to workspace 5
+bindsym $alt+Shift+6 move container to workspace 6
+bindsym $alt+Shift+7 move container to workspace 7
+bindsym $alt+Shift+8 move container to workspace 8
+bindsym $alt+Shift+9 move container to workspace 9
+
+# move focused container to workspace and go there
+bindsym $sup+Ctrl+1 move container to workspace 1;  workspace 1
+bindsym $sup+Ctrl+2 move container to workspace 2;  workspace 2
+bindsym $sup+Ctrl+3 move container to workspace 3;  workspace 3
+bindsym $sup+Ctrl+4 move container to workspace 4;  workspace 4
+bindsym $sup+Ctrl+5 move container to workspace 5;  workspace 5
+bindsym $sup+Ctrl+6 move container to workspace 6;  workspace 6
+bindsym $sup+Ctrl+7 move container to workspace 7;  workspace 7
+bindsym $sup+Ctrl+8 move container to workspace 8;  workspace 8
+bindsym $sup+Ctrl+9 move container to workspace 9;  workspace 9
+
+# Move focused container to next/prev workspace
+bindsym $sup+$alt+h exec $i3scripts/move-to-relative-workspace -1
+bindsym $sup+$alt+l exec $i3scripts/move-to-relative-workspace  1
+
+# Go to a new workspace
+bindsym $sup+0 exec $i3scripts/goto-next-workspace 
+bindsym $sup+n exec $i3scripts/goto-next-workspace 
+
+# workspace next_on_output
+bindsym $sup+l         workspace next_on_output 
+bindsym $sup+h         workspace prev_on_output 
+
+bindsym $sup+ccedilla  workspace back_and_forth
+
+bindsym $sup+Left  exec $i3scripts/goto-ws 2 2 ← 
+bindsym $sup+Down  exec $i3scripts/goto-ws 2 2 ↓ 
+bindsym $sup+Up    exec $i3scripts/goto-ws 2 2 ↑ 
+bindsym $sup+Right exec $i3scripts/goto-ws 2 2 → 
+
+
+
+
+################################################################################
+#                                   System
+################################################################################
+
+# reload the configuration file
+bindsym $alt+Shift+r reload
+
+
+# drun - read .desktop files and launch applications
+# dmenu_run - applications in the $PATH
+# run - run commands available in $PATH
+
+# start dmenu (a program launcher)
+bindsym $sup+p      exec rofi -show drun -drun-match-fields name $rofi-theme
+bindsym $sup+F1     exec rofi -show run $rofi-theme
+bindsym $sup+F2     exec rofi -show window $rofi-theme
+
+bindsym $sup+d      exec dmenu_run 
+bindsym $sup+Escape exec i3-dmenu-desktop --dmenu='dmenu -nb black -sf black -b -i '
+bindsym Ctrl+Escape exec i3-dmenu-desktop --dmenu='dmenu -nb black -nf white -sb red -sf black -b -i '
+
+
+
+
+
+################################################################################
+#                                   Controls
+################################################################################
+
+
+# change volume or toggle mute
+# Needs mako enabled as a service for user notification
+# [~] systemctl --user enable --now mako.service
+
+bindsym XF86AudioRaiseVolume exec $i3scripts/volume-control up
+bindsym XF86AudioLowerVolume exec $i3scripts/volume-control down
+bindsym XF86AudioMute exec $i3scripts/volume-control mute
+
+
+# Screen brightness controls
+bindsym XF86MonBrightnessDown exec $i3scripts/set-brightness 5-
+bindsym XF86MonBrightnessUp   exec $i3scripts/set-brightness 5+
+
+bindsym --release Caps_Lock       exec pkill -SIGRTMIN+11 i3blocks
+bindsym --release Num_Lock        exec pkill -SIGRTMIN+11 i3blocks
+bindsym --release Scroll_Lock     exec pkill -SIGRTMIN+11 i3blocks
+
+
+
+################################################################################
+#                                  Launchers
+################################################################################
+
+
+# Start a Terminal
+bindsym $alt+Return    exec xfce4-terminal
+bindsym $sup+Return    exec alacritty
+bindsym $alt+Control+t exec urxvt
+bindsym $alt+F12       exec xfce4-terminal --drop-down
+
+bindsym $alt+Ctrl+r    exec $HOME/.local/bin/recents              # installed with pipx
+    
+bindsym $alt+Ctrl+p exec cliphist list | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
+bindsym $alt+c      exec cliphist list | head -n 20 | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
+
+
+
+################################################################################
+#                             Nice funcionalities
+################################################################################
+
+
+# Rofi shutdown menu
+bindsym Ctrl+$alt+Delete       exec $gadgets/shutdown_menu
+
+# Change keyboard layout
+bindsym Ctrl+space             exec $i3scripts/set-next-keyboard-layout  
+
+bindsym Ctrl+Shift+r           exec urxvt -name rangerterm -e ranger   
+bindsym Ctrl+Shift+i           exec urxvt -name nmtuiwin -e nmtui
+bindsym Ctrl+Shift+j split v ; exec urxvt -name codetesting ;
+
+
+# Print Screen
+# Select a region
+bindsym $sup+Shift+4 exec sh -c 'grim -g "$(slurp)" - | wl-copy -t image/png'
+
+# Entire screen
+bindsym $sup+Shift+3 exec sh -c 'grim - | wl-copy -t image/png && notify-send "Screenshot" "Screen copied to clipboard"'
+
+# Codding Layout
+bindsym $sup+c exec $i3scripts/goto-coding
+
+
+bindsym Ctrl+Shift+w exec sh -c 'name=$(printf "" | rofi -dmenu -p "New name for this workspace" -theme ojf); [ -n "$name" ] && swaymsg rename workspace to "$name"'
+
+
+
+
+################################################################################
+###################                  Modes                 #####################
+################################################################################
+
+bindsym $sup+r mode "$resize_mode"
+bindsym $sup+m mode "$move_mode"    focus floating
+bindsym $alt+p mode "$launch_mode" 
+bindsym $sup+g mode "$mode_gaps"
+
+
+# resize window (you can also use the mouse for that)
+set $resize_mode [h]grow width [j]shrink height [k]grow height  [l]shrink width  [i]inflate [d]deflate [c]enter [m]ove
+mode "$resize_mode" {
+
+		bindsym h resize grow   width  10 px
+        bindsym j resize shrink height 10 px
+		bindsym k resize grow   height 10 px
+		bindsym l resize shrink width  10 px
+	
+		bindsym i resize grow   width 1 px or 1 ppt ; resize grow   height 1 px or 1 ppt ; move position center
+		bindsym d resize shrink width 1 px or 1 ppt ; resize shrink height 1 px or 1 ppt ; move position center
+
+		bindsym c move position center
+
+        # back to normal: Enter or Escape or $sup+r
+        bindsym q      mode "default"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+        bindsym r      mode "default"
+		bindsym m      mode "$move_mode" 
+}
+
+
+# move floating window 
+set $move_mode [h]left [j]down [k]up [l]right [c]enter [r]esize
+mode "$move_mode" {
+
+	bindsym h	move left
+	bindsym j	move down
+	bindsym k	move up
+	bindsym l	move right
+	bindsym c	move position center
+
+    # back to normal: Enter or Escape or $mod+m
+	bindsym q      mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym m      mode "default"
+	bindsym r      mode "$resize_mode"
+}
+
+
+set $launch_mode Launch: [f]irefox [c]hromium [n]autilus [t]erminal [l]eafpad [s]peedcrunch
+mode "$launch_mode" {
+	bindsym f workspace "" ; exec firefox  ;      mode "default"; 
+	bindsym c workspace "" ; exec google-chrome ; mode "default"; 
+	bindsym n workspace "" ; exec nautilus ;      mode "default"; 
+
+    bindsym t exec xfce4-terminal --role floatingterminal   ;      mode "default";  
+	bindsym l exec leafpad;                                 ;      mode "default";  
+	bindsym s exec speedcrunch                              ;      mode "default";  
+
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym $alt+p mode "default"
+}
+
+
+
+################################################################################
+#                                i3-gaps stuff                                 #
+################################################################################
+
+
+# Gaps mode
+set $mode_gaps Gaps: (o)uter, (i)nner 
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+
+		bindsym Return mode "default"
+        bindsym Escape mode "default"
+		bindsym $sup+g mode "default"
+}
+
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "$mode_gaps"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 13
+        bindsym minus gaps inner current minus 6
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "$mode_gaps"
+        bindsym Escape mode "default"
+}
+
+
+
+# ================================== [ Rules ] ===================================
+
+for_window [app_id="speedcrunch"]                 floating enable, resize set width 800 px height 600 px
+for_window [app_id="xdg-desktop-portal-gtk"]      floating enable, resize set width 1000 px height 600 px
+for_window [app_id="google-chrome"]               gaps inner current set 0
+
+
+
+
+
+################################################################################
+#                           The amazing status bar                             #
+################################################################################
+
+
+bar {
+	# font pango:monospace, FontAwesome 8
+    # font pango:monospace, Font Awesome 5 Free Solid 10
+	font pango:Font Awesome 5 Free Solid, roboto, monospace 8
+	status_command i3blocks
+	# bindsym button4 nop
+	# bindsym button5 nop
+
+	# position top 
+
+    # used to show the bar when in the invisible mode
+	modifier none 
+
+    workspace_buttons yes
+    workspace_min_width 30
+
+    tray_output none
+	height 16
+
+	colors {
+		# background         #2b303b80
+		background         #00000080
+		binding_mode       #000000 #000000 #ffffff
+
+        focused_workspace  #555555ff #444444ff #ffffffff
+        active_workspace   #33333380 #33333380 #ffffff80
+        inactive_workspace #11111180 #222222d0 #88888880
+        urgent_workspace   #ff000080 #ff000080 #ffffff80
+	} 
+}
+
+
+
+

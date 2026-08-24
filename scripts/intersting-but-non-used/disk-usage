@@ -1,0 +1,14 @@
+#!/bin/bash
+read file used pcent <<< "$(df -h / --output=file,used,pcent | tail -1)" # o sinal <<< usa a variável de ambienet IFS como delimitador para cortar o texto e atribuir nas variaveis
+
+color='#ffffff'
+
+if [ ${pcent//%} -gt 90 ]; then  # o //% remove o sinal %
+color='#ff3300'
+fi
+
+echo "<span color='$color'> $file $used</span>"	
+
+
+
+# df -h / --output=file,used,pcent | tail -1 | tr -s " "

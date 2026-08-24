@@ -1,0 +1,5 @@
+#!/bin/bash
+
+swaymsg input type:keyboard xkb_switch_layout next
+
+pkill -RTMIN+12 i3blocks

@@ -1,0 +1,2 @@
+/home/.functions/i3blocks/goto-next-workspace
+i3-msg "append_layout  ~/.config/i3/layouts/coding.json"

@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# icon=""
+icon=""
+# icon="M"
+
+MEM=($(head -n5 /proc/meminfo | sed "s/[\t ][\t ]*/ /g" | cut -d" " -f2 ))
+totl=${MEM[0]}
+free=${MEM[1]}
+buff=${MEM[3]}
+cach=${MEM[4]}
+
+used=$(( totl-free-buff-cach )) 
+perc=$( echo "( $used * 100 ) / $totl" | bc )
+
+if   [ $percent -ge 95 ]; then
+	color="red"
+elif [ $perc-ge 90 ]; then
+	color="yellow"
+elif [ $perc-ge 75 ]; then
+	color="orange"
+elif [ $perc-ge 50 ]; then
+	color="dark cyan"
+else
+	color="white"
+fi 
+
+	
+# text="<span color='$color'>$icon $usedG"G" $perc%</span>" 
+text="<span color='$color'>$icon</span>" 
+
+ 
+case "$BLOCK_BUTTON" in
+	1) 
+	   usedG=$( printf '%3.2f\n' $(echo "$used/1024/1024" | bc -l) )
+	   text=$text" "$usedG"G"
+	   ;;
+	3) 
+	   totlG=$( printf '%3.2f\n' $(echo "$totl/1024/1024" | bc -l) )
+	   freeG=$( printf '%3.2f\n' $(echo "$free/1024/1024" | bc -l) )
+	   buffG=$( printf '%3.2f\n' $(echo "$buff/1024/1024" | bc -l) )
+	   cachG=$( printf '%3.2f\n' $(echo "$cach/1024/1024" | bc -l) )
+	   usedG=$( printf '%3.2f\n' $(echo "$used/1024/1024" | bc -l) )
+
+	   nTotl="Total:   "$totlG"G\n"
+	   nFree="Free:    "$freeG"G\n"
+	   nSepr="--------------\n"
+	   nBuff="Buffers: "$buffG"G\n"
+	   nCach="Cached:  "$cachG"G\n"
+	   nUsed="Used:    "$usedG"G\n"
+
+	   notify=" \n"$nTotl$nFree$nSepr$nBuff$nCach$nSepr$nUsed
+	   dunstify --replace=2 -t 16000 "Battery" "$notify" ;;
+esac
+
+
+
+echo $text
+
+
+
+
+# https://stackoverflow.com/questions/11393817/read-lines-from-a-file-into-a-bash-array
+# https://stackoverflow.com/questions/17137269/take-nth-column-in-a-text-file
+
+# IFS=$'\r\n' GLOBIGNORE='*' command eval  'MEM=($(head -n5 /proc/meminfo | sed "s/[\t ][\t ]*/ /g" | cut -d" " -f2 ))'
+# men=`head -n5 /proc/meminfo | sed "s/[\t ][\t ]*/ /g" | cut -d" " -f2 `
+# echo $men
+
+# usedG=$( echo "scale=1; $used/1024/1024" | bc  )
+
+# IFS=$'\r\n' GLOBIGNORE='*' command eval  'XYZ=($(cat /etc/passwd))'
+# echo "${XYZ[5]}"
+

@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+import i3ipc
+import sys
+
+i3 = i3ipc.Connection()
+
+
+def printwintitle(i3, e):
+    win = i3.get_tree().find_focused()
+
+    # No actual application window focused
+    if not win or (not win.app_id and not win.window):
+        print()
+        sys.stdout.flush()
+        return
+
+    msg = win.name
+
+    if not msg:
+        print()
+        sys.stdout.flush()
+        return
+
+    max_len = 70
+
+    if len(msg) > max_len:
+        h = max_len // 2
+        msg = f"{msg[:h]}…{msg[-h:]}"
+
+    print(f"<span color='#555555'>{msg}</span>")
+    sys.stdout.flush()
+
+printwintitle(i3, None)
+
+i3.on("window::new", printwintitle)
+i3.on("window::close", printwintitle)
+i3.on("window::title", printwintitle)
+i3.on("window::focus", printwintitle)
+i3.on("workspace::focus", printwintitle)
+
+i3.main()

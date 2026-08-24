@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# Amount to increase or decrease brightness, passed as a percentage.
+# Example: -10 to decrease by 10%, or 15 to increase by 15%.
+DELTA=$1
+
+# Path to the system backlight directory
+BACKLIGHT_DIR="/sys/class/backlight"
+
+# Automatically select the first available backlight device
+# This works for most systems including Intel, AMD, and MacBook drivers
+DEVICE=$(ls "$BACKLIGHT_DIR" | head -n 1)
+
+# Path to the current brightness value
+BRIGHTNESS_PATH="$BACKLIGHT_DIR/$DEVICE/brightness"
+
+# Path to the maximum brightness value
+MAX_PATH="$BACKLIGHT_DIR/$DEVICE/max_brightness"
+
+# Validate that the brightness control file exists
+if [ ! -f "$BRIGHTNESS_PATH" ]; then
+  echo "No backlight device found. Brightness control is not available."
+  exit 1
+fi
+
+# Read the current brightness and maximum brightness values
+CURRENT=$(cat "$BRIGHTNESS_PATH")
+MAX=$(cat "$MAX_PATH")
+
+# Convert the percentage delta into an absolute value
+DELTA_RAW=$(echo "$MAX * $DELTA / 100" | bc)
+
+# Calculate the new brightness
+NEW=$(($CURRENT + $DELTA_RAW))
+
+# Clamp the new brightness to stay within 1 and MAX
+if [ "$NEW" -lt 1 ]; then
+  NEW=1
+elif [ "$NEW" -gt "$MAX" ]; then
+  NEW=$MAX
+fi
+
+# Apply the new brightness using sudo tee (requires permission)
+echo "$NEW" | sudo tee "$BRIGHTNESS_PATH"
+

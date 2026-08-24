@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+import i3ipc
+import sys
+
+if (len(sys.argv)>1):
+    i3 = i3ipc.Connection()
+    msg = i3.get_tree().find_focused().window_class
+
+    if (len(msg) > 60):
+        msg = "{}…".format(msg[:60])
+
+    msg = "<span color='#777777'>"+msg+"</span>"
+
+else:
+    msg=''
+
+print(msg)
+
+
+
+
+#  https://www.compart.com/en/unicode/U+2B1C
+
+    #  msg='🗔'
+    #  msg='🗖'
+    #  msg='□'
+    #  msg=''
+    #  msg='-'
+    #  msg='☐'
+    #  msg='⬜'
+    #  msg=''
+    #  msg=''
+    #  msg='¹²³'
+    #  msg='■'
+    #  msg='▪'
+    #  msg='◽'
+    #  msg='⯀'
+    #  msg='□'
+    #  msg='▢'
+

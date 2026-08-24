@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Get the direction (default to +1)
+offset=${1:-1}
+
+# Get the current workspace number
+current_ws=$(i3-msg -t get_workspaces | jq '.[] | select(.focused==true).num')
+
+# Check if current_ws is a number
+if ! [[ "$current_ws" =~ ^-?[0-9]+$ ]]; then
+  exit 1
+fi
+
+# Calculate target workspace
+target_ws=$((current_ws + offset))
+
+
+# Prevent moving to workspace 0 or negative
+if [ "$target_ws" -lt 1 ]; then
+  # target_ws=1  # back_and_forth
+  exit 1
+fi
+
+
+# Move container and switch to the target workspace
+i3-msg "move container to workspace number $target_ws"
+i3-msg "workspace number $target_ws"

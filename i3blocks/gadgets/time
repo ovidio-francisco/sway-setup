@@ -1,0 +1,13 @@
+#!/bin/bash
+
+case "$BLOCK_BUTTON" in
+    1)
+		date '+%b-%d'
+        ;;
+    5)
+		date '+%b-%d %H:%M'
+        ;;
+    *)
+        date '+%H:%M'
+        ;;
+esac

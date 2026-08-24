@@ -1,0 +1,92 @@
+#!/bin/bash
+
+acpi=$(acpi -b)
+
+highest_perc=0
+stat="Unknown"
+
+# Loop through each battery found by ACPI
+while IFS= read -r line; do
+    
+    # Check if the line contains 'charging' or 'discharging' and adjust parsing accordingly
+    if [[ "$line" =~ ([0-9]+)% ]]; then
+        battery_perc="${BASH_REMATCH[1]}"
+    else
+        continue  # Skip invalid lines
+    fi
+
+    battery_stat=$(echo "$line" | awk -F '[ ,%]' '{print $3}')
+    
+    # Keep the highest percentage and associated status
+    if [ "$battery_perc" -gt "$highest_perc" ]; then
+        highest_perc=$battery_perc
+        stat=$battery_stat
+    fi
+done <<< "$acpi"
+
+perc=$highest_perc
+
+
+
+# Determine battery icon based on percentage
+if   [ "$perc" -lt 25 ]; then bar=""
+elif [ "$perc" -lt 50 ]; then bar=""
+elif [ "$perc" -lt 75 ]; then bar=""
+elif [ "$perc" -lt 90 ]; then bar=""
+else bar=""
+fi
+
+# Determine color based on percentage
+if   [ "$perc" -lt 10 ]; then color="#ff0000"
+elif [ "$perc" -lt 20 ]; then color="#ff3300"
+elif [ "$perc" -lt 30 ]; then color="#ff6600"
+# elif [ "$perc" == 100 ]; then color="#008000"
+elif [ "$perc" == 100 ]; then color="#ffffff"
+else color="#ffffff"
+fi
+
+# Alert for low battery
+if [ "$perc" -lt 10 ] && [ "$stat" == "Discharging" ]; then
+    alert="!"
+else
+    alert=""
+fi
+
+# Build the battery bar
+bar=$alert$bar
+
+light="⚡"
+plug="" 
+bar="<span color='$color'>$bar</span>"
+perc="<span color='$color'>$perc%</span>"
+dot="<span color='#00ff00'>•</span>"
+
+
+
+if   [ "$stat" == "Discharging" ]; then text=$bar
+elif [ "$stat" == "Full" ];        then text=$bar$dot
+elif [ "$stat" == "Not" ];         then text=$plug
+elif [ "$stat" == "Charging" ];    then text=$light$bar
+fi
+
+
+# Left-click adds percentage to display 
+# Right-click sends notification        
+case "$BLOCK_BUTTON" in
+    1) text=$text" "$perc ;;  
+    3) notify=$(echo "$acpi" | cut -d' ' -f3-)
+	   dunstify --replace=2 -t 4000 "Battery" "$notify" 
+	   ;;
+esac
+
+
+echo "$text"
+
+
+# Charging: The battery is plugged in and actively charging (the battery percentage is increasing).
+# Discharging: The laptop is running on battery power, and the battery is losing charge (the battery percentage is decreasing).
+# Not charging: The laptop is plugged into a power source, but the battery is either already fully charged or the system is preventing it from charging to prolong battery life.
+
+
+
+

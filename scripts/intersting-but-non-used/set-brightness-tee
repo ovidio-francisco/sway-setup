@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Usage: ./set-brightness.sh [+|-]PERCENT or PERCENT (absolute)
+
+INPUT="$1"
+
+# Backlight device
+DEVICE=$(ls /sys/class/backlight | head -n 1)
+BRI_PATH="/sys/class/backlight/$DEVICE/brightness"
+MAX_PATH="/sys/class/backlight/$DEVICE/max_brightness"
+
+# Read current and max brightness
+CUR=$(cat "$BRI_PATH")
+MAX=$(cat "$MAX_PATH")
+
+# Determine brightness target
+if [[ "$INPUT" =~ ^[+-] ]]; then
+  # Relative change
+  SIGN="${INPUT:0:1}"
+  VALUE="${INPUT:1}"
+  STEP=$(echo "$MAX * $VALUE / 100" | bc)
+  if [[ "$SIGN" == "-" ]]; then
+    NEW=$((CUR - STEP))
+  else
+    NEW=$((CUR + STEP))
+  fi
+else
+  # Absolute percentage
+  NEW=$(echo "$MAX * $INPUT / 100" | bc)
+fi
+
+# Clamp to [1, MAX]
+[[ $NEW -lt 1 ]] && NEW=1
+[[ $NEW -gt $MAX ]] && NEW=$MAX
+
+# Apply new brightness
+echo "$NEW" | sudo tee "$BRI_PATH" > /dev/null
+
+# Calculate percentage
+PERCENT=$(echo "$NEW * 100 / $MAX" | bc)
+
+# Build visual bar
+LEN=20
+THICK_CHAR='▮'
+THIN_CHAR='▯'
+
+FILLED=$(printf '%.0f' "$(echo "scale=2; $LEN * $PERCENT / 100" | bc)")
+EMPTY=$((LEN - FILLED))
+
+BAR=""
+for ((i = 0; i < FILLED; i++)); do
+  BAR+=$THICK_CHAR
+done
+for ((i = 0; i < EMPTY; i++)); do
+  BAR+=$THIN_CHAR
+done
+
+# Icon
+ICON=""
+
+# Send notification
+dunstify --replace=999 -t 1500 "$ICON Brightness $PERCENT%" "$BAR"

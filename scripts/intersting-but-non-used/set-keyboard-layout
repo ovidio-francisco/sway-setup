@@ -1,0 +1,14 @@
+#!/bin/bash
+
+
+if [ -n "$2" ]; then
+	variant=" -variant $2"
+fi
+
+
+setxkbmap -layout $1$variant
+
+
+
+
+

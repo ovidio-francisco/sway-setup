@@ -1,0 +1,59 @@
+#!/bin/bash
+
+
+case "$BLOCK_BUTTON" in
+    1|2|3)
+		i3-msg workspace next_on_output 1>/dev/null  ;;
+	4)
+		i3-msg workspace next_on_output 1>/dev/null  ;;
+	5)
+		i3-msg workspace prev_on_output 1>/dev/null  ;;
+esac
+
+
+
+wsnum=`i3-msg -t get_workspaces | sed 's/},{/\n/g' | grep '"focused":true' | cut -d, -f1 | cut -d: -f2 | tr -d '"'`
+
+
+gost="<span color='black'>.</span>"
+ a=( "$gost"0 
+	 "▀$gost" "$gost▀"
+	 "▄$gost" "$gost▄" 
+)
+
+
+# a=( 
+# "$gost"0 
+# "¹$gost" "$gost²" 
+# "₃$gost" "$gost₄" 
+# )
+
+
+
+wscolor=#4c7899
+
+
+
+case "$wsnum" in
+	 0) echo "<span color='$wscolor'>${a[0]}</span>" ;;
+	 1) echo "<span color='$wscolor'>${a[1]}</span>" ;;
+	 2) echo "<span color='$wscolor'>${a[2]}</span>" ;;
+	 3) echo "<span color='$wscolor'>${a[3]}</span>" ;;
+	 4) echo "<span color='$wscolor'>${a[4]}</span>" ;; 
+	 *) echo "<span color='$wscolor'>$wsnum</span>" ;;
+esac
+
+
+# a=( 
+# "$gost"0 
+# "¹$gost" "$gost²" 
+# "₃$gost" "$gost₄" 
+# )
+
+# a=( "0" "▄█" "█▄" "▀█" "█▀" )
+# a=( "0" "▘" "▝" "▖" "▗" ) 
+# a=( "0" "▟" "▙" "▜" "▛" ) 
+# a=( "0" "◰" "◳" "◱" "◲" ) 
+# a=( "0" "◸" "◹" "◺" "◿" ) 
+# a=( "0" "◤" "◥" "◣" "◢" ) 
+

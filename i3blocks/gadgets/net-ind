@@ -1,0 +1,61 @@
+#!/bin/bash 
+
+checkInterface() {
+
+	INTERFACE=$(nmcli -t -f DEVICE,TYPE,STATE device |
+		awk -F: '$2 == "ethernet" && $3 == "connected" { print $1; exit }')
+
+	# Prefer Ethernet if both Ethernet and Wi-Fi are connected
+	if [[ -n "$INTERFACE" ]]; then
+		CONNECTION_TYPE="ethernet"
+
+		icon="<span>🖧</span>"
+		return
+	fi
+
+	# Otherwise look for Wi-Fi
+	INTERFACE=$(nmcli -t -f DEVICE,TYPE,STATE device |
+		awk -F: '$2 == "wifi" && $3 == "connected" { print $1; exit }')
+
+	if [[ -n "$INTERFACE" ]]; then
+		CONNECTION_TYPE="wifi"
+
+		# icon="<span color='$color'></span>"
+		icon="<span font_desc='Font Awesome 7 Free Solid'></span>"
+		return
+	fi
+
+	CONNECTION_TYPE="none"
+	INTERFACE=""
+	icon="<span></span>"
+}
+
+
+checkInterface
+text=$icon
+
+
+case "$BLOCK_BUTTON" in
+	1)
+		#------------------------------------------------------------------------
+		QUALITY=$(nmcli -t -f IN-USE,SIGNAL dev wifi list ifname "$INTERFACE" | awk -F: '$1 == "*" { print $2; exit }')
+		#------------------------------------------------------------------------
+
+		if [[ "$CONNECTION_TYPE" == "wifi" ]]; then
+			ssid=$(nmcli -g GENERAL.CONNECTION device show "$INTERFACE")
+			text="$text $ssid ${QUALITY}%"
+
+		elif [[ "$CONNECTION_TYPE" == "ethernet" ]]; then
+			speed=$(cat "/sys/class/net/$INTERFACE/speed" 2>/dev/null)
+			text="$text ${speed}Mb/s"
+
+		else
+			text="$text Offline"
+		fi
+		;;
+esac
+
+echo $text
+
+
+
