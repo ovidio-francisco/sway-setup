@@ -266,8 +266,7 @@ bindsym $sup+Escape exec i3-dmenu-desktop --dmenu='dmenu -nb black -sf black -b 
 bindsym Ctrl+Escape exec i3-dmenu-desktop --dmenu='dmenu -nb black -nf white -sb red -sf black -b -i '
 
 
-
-
+bindsym $alt+Shift+e exec swaymsg exit
 
 ################################################################################
 #                                   Controls

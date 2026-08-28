@@ -13,16 +13,45 @@ pkill -RTMIN+1 i3blocks
 vol=$(pamixer --get-volume)
 mute=$(pamixer --get-mute)
 
+
+
 if [ "$mute" = "true" ]; then
-    notify-send \
-        -a volume \
-        -h string:x-canonical-private-synchronous:volume \
-        -h int:value:0 \
-        "Volume" "Muted"
+	val=0
+	text="muted"
 else
-    notify-send \
-        -a volume \
-        -h string:x-canonical-private-synchronous:volume \
-        -h int:value:"$vol" \
-        "Volume" "$vol%"
+	val="$vol"
+	text="Volume" "$vol%"
 fi
+
+
+notify-send \
+	-a volume \
+	-h string:x-canonical-private-synchronous:volume \
+	-r 999 \
+	-t 200 \
+	-h int:value:"$val" \
+	"$text"
+
+
+
+
+# if [ "$mute" = "true" ]; then
+    # notify-send \
+        # -a volume \
+        # -h string:x-canonical-private-synchronous:volume \
+		# -r 999 \
+		# -t 200 \
+        # -h int:value:0 \
+        # "Volume" "Muted"
+# else
+    # notify-send \
+        # -a volume \
+        # -h string:x-canonical-private-synchronous:volume \
+		# -r 999 \
+		# -t 200 \
+        # -h int:value:"$vol" \
+        # "Volume" "$vol%"
+# fi
+
+
+

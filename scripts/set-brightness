@@ -19,6 +19,8 @@ PERCENT=$(printf "%.0f" "$PERCENT")
 # Notify
 notify-send \
     -a brightness \
-    -h string:x-canonical-private-synchronous:brightness \
+	-h string:x-canonical-private-synchronous:brightness \
+	-r 999 \
+	-t 200 \
     -h int:value:"$PERCENT" \
     "Brightness" "$PERCENT%"
