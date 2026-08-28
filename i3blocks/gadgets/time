@@ -2,11 +2,22 @@
 
 case "$BLOCK_BUTTON" in
     1)
-		date '+%b-%d'
+        date '+%b-%d'
         ;;
+
+    3)
+        gsimplecal >/dev/null 2>&1 &
+        date '+%H:%M'
+        ;;
+
+    4)
+        date '+%b-%d %H:%M'
+        ;;
+
     5)
-		date '+%b-%d %H:%M'
+        date '+%b-%d %H:%M'
         ;;
+
     *)
         date '+%H:%M'
         ;;

@@ -241,6 +241,23 @@ bindsym $sup+Down  exec $i3scripts/goto-ws 2 2 ↓
 bindsym $sup+Up    exec $i3scripts/goto-ws 2 2 ↑ 
 bindsym $sup+Right exec $i3scripts/goto-ws 2 2 → 
 
+bindsym $sup+Shift+Right move container to output right
+bindsym $sup+Shift+Left  move container to output left
+
+# bindsym $sup+F8 exec wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen
+# bindsym $sup+F8 exec sh -c 'pgrep wl-mirror >/dev/null && pkill wl-mirror || wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen'
+# bindsym $sup+F8 exec wl-present mirror eDP-1 \
+    # --fullscreen-output HDMI-A-1 \
+    # --fullscreen \
+    # --scaling fit
+
+# Mirror laptop → projector
+# bindsym $sup+F8 exec sh -c 'swaymsg output HDMI-A-1 mode 1440x900 scale 1; wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen --scaling fit'
+bindsym $sup+F8 exec ~/.config/sway/scripts/mirror
+
+
+
+no_focus [app_id="at.yrlf.wl_mirror"]
 
 
 
@@ -462,9 +479,10 @@ mode "$mode_gaps_inner" {
 
 for_window [app_id="speedcrunch"]                 floating enable, resize set width 800 px height 600 px
 for_window [app_id="xdg-desktop-portal-gtk"]      floating enable, resize set width 1000 px height 600 px
+for_window [app_id="org.gnome.Nautilus"]          floating enable, resize set width 1000 px height 600 px
 for_window [app_id="google-chrome"]               gaps inner current set 0
 
-
+for_window [app_id="gsimplecal"] floating enable, move position mouse, move up 20 px
 
 
 

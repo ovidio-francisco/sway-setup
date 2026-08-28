@@ -1,0 +1,44 @@
+#!/bin/bash
+
+outputs=$(swaymsg -r -t get_outputs)
+
+# Internal laptop screen
+SOURCE=$(echo "$outputs" | jq -r '
+    .[]
+    | select(.active)
+    | select(.name | test("^(eDP|LVDS|DSI)"))
+    | .name
+' | head -1)
+
+# Any other active screen = projector/external display
+DEST=$(echo "$outputs" | jq -r --arg src "$SOURCE" '
+    .[]
+    | select(.active)
+    | select(.name != $src)
+    | .name
+' | head -1)
+
+if [[ -z "$SOURCE" || -z "$DEST" ]]; then
+    notify-send "Mirror" "No external display found"
+    exit 1
+fi
+
+# Get laptop's current resolution
+read WIDTH HEIGHT < <(
+    echo "$outputs" |
+    jq -r --arg src "$SOURCE" '
+        .[]
+        | select(.name == $src)
+        | "\(.current_mode.width) \(.current_mode.height)"
+    '
+)
+
+# Try to make projector match laptop.
+# If unsupported, Sway falls back to its preferred mode.
+swaymsg output "$DEST" mode "${WIDTH}x${HEIGHT}" scale 1 >/dev/null
+
+# Mirror while preserving aspect ratio
+wl-present mirror "$SOURCE" \
+    --fullscreen-output "$DEST" \
+    --fullscreen \
+    --scaling fit
