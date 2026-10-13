@@ -4,32 +4,25 @@ import i3ipc
 import sys
 
 i3 = i3ipc.Connection()
-gost="<span color='black'>▀</span>"
+gost="<span color='black'> </span>"
 
-a = [ gost+"0",
-     "▀"+gost, gost+"▀", 
-     "▄"+gost, gost+"▄"]
+a = [ "0",
+      "▀"+gost, gost+"▀", 
+      "▄"+gost, gost+"▄"]
 
-
-
-#  ¹ ² ³ ⁴
-#  ₁ ₂ ₃ ₄
-
-#  a = [ gost+"0",
-     #  "¹"+gost, gost+"²", 
-     #  "₃"+gost, gost+"₄"]
 
 wscolor="'#4c7899'"
 
 
+def getWs():
+    return i3.get_tree().find_focused().workspace().num
+
+
 def printDisplay(i3, e):
 
-    n = i3.get_tree().find_focused().workspace().num
+    n = getWs()
 
-    if (n>4):
-        display = "<span color=%s>%s</span>" % (wscolor, n)
-    else:
-        display = "<span color=%s>%s</span>" % (wscolor, a[n])
+    display = "<span color=%s>%s</span>" % (wscolor, n if n > 4 else a[n])
 
     print(display)
     sys.stdout.flush()
@@ -42,3 +35,6 @@ i3.on('workspace::focus', printDisplay)
 
 i3.main()
 
+
+
+#  a = [ "0", #  "¹"+gost, gost+"²", #  "₃"+gost, gost+"₄"]

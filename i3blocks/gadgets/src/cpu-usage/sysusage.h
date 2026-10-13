@@ -14,6 +14,7 @@
 #define SHOW_BAR     0
 
 
+#define ICON_LIGHT  "💡"
 #define ICON_TUX    ""
 #define ICON_SKULL1 "☠"
 #define ICON_SKULL2 ""

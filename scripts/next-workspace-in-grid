@@ -6,7 +6,7 @@ dir=$3
 dim=2
 
 getFocusedWorkspace() {
-	ws=$(i3-msg -t get_workspaces | sed 's/},{/\n/g' | grep 'focused":true' | cut -d, -f2 | cut -d: -f2)
+	ws=$(swaymsg -t get_workspaces | jq -r '.[] | select(.focused) | .name')
 echo $ws 
 }
 

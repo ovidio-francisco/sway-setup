@@ -1,7 +1,0 @@
-#!/bin/bash
-num=$(xset -q | grep Caps | awk '{print $8}')
-
-if [ $num = 'on' ]; then
-	echo "<span color='#ff0000'>NUM</span>"
-fi
-

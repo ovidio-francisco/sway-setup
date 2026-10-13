@@ -41,4 +41,7 @@ swaymsg output "$DEST" mode "${WIDTH}x${HEIGHT}" scale 1 >/dev/null
 wl-present mirror "$SOURCE" \
     --fullscreen-output "$DEST" \
     --fullscreen \
-    --scaling fit
+    --scaling fit &
+
+sleep 0.2
+swaymsg focus output "$SOURCE"

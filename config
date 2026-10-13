@@ -6,11 +6,51 @@
 #                        |___/                         |___/
 
 
+# TODO: super+shift+l -> goto next workspacd
 
 # autostarts
 output * bg ~/.config/wallpapers/theWallpaper fill
-exec ~/.config/sway/scripts/set-keyboard-startup us_hacked
-exec wl-paste --type text --watch cliphist store
+# exec ~/.config/sway/scripts/set-keyboard-startup us_hacked
+# exec ~/.config/sway/scripts/set-keyboard-startup us
+
+
+exec wl-clip-persist --clipboard regular
+# exec sh -c 'PATH="$HOME/.cargo/bin:$PATH"; exec wl-clip-persist --clipboard regular'
+
+# exec wl-paste --type text --watch cliphist store
+# exec wl-paste --type image --watch cliphist store
+
+
+
+# exec wl-clip-persist --clipboard regular
+# exec wl-paste --watch cliphist store
+
+
+
+# ========== [ SwayFX configs ] ==========
+
+
+corner_radius 9
+# Shadow
+# shadows enable
+# shadow_blur_radius 20
+# shadow_color #00000080
+# shadow_inactive_color #00000050
+# shadow_offset 0 4
+
+# Inactive windows
+# default_dim_inactive 0.08
+
+# animation_duration_ms 250
+
+# blur enable
+# blur_xray disable
+
+# blur_passes 2
+# blur_radius 3
+
+
+
 
 exec_always sh -c 'dbus-update-activation-environment --systemd WAYLAND_DISPLAY SWAYSOCK; systemctl --user start mako.service'
 exec_always sh -c 'sleep 1; pkill -RTMIN+12 i3blocks' # initialize keyboard indicator
@@ -111,16 +151,9 @@ bindsym $alt+Shift+Escape    move scratchpad
 # Show the first scratchpad window
 bindsym $alt+BackSpace scratchpad show
 
-# The middle button and a modifer over any part of the window kills the window
-bindsym --whole-window $alt+Shift+button2 kill
-
 # The side buttons move the window around
 bindsym button9 move left
 bindsym button8 move right
-
-
-# The right button toggles floating
-bindsym --whole-window $alt+button2 floating toggle
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $sup
@@ -212,52 +245,45 @@ bindsym $alt+Shift+8 move container to workspace 8
 bindsym $alt+Shift+9 move container to workspace 9
 
 # move focused container to workspace and go there
-bindsym $sup+Ctrl+1 move container to workspace 1;  workspace 1
-bindsym $sup+Ctrl+2 move container to workspace 2;  workspace 2
-bindsym $sup+Ctrl+3 move container to workspace 3;  workspace 3
-bindsym $sup+Ctrl+4 move container to workspace 4;  workspace 4
-bindsym $sup+Ctrl+5 move container to workspace 5;  workspace 5
-bindsym $sup+Ctrl+6 move container to workspace 6;  workspace 6
-bindsym $sup+Ctrl+7 move container to workspace 7;  workspace 7
-bindsym $sup+Ctrl+8 move container to workspace 8;  workspace 8
-bindsym $sup+Ctrl+9 move container to workspace 9;  workspace 9
+bindsym $alt+1 move container to workspace 1;  workspace 1
+bindsym $alt+2 move container to workspace 2;  workspace 2
+bindsym $alt+3 move container to workspace 3;  workspace 3
+bindsym $alt+4 move container to workspace 4;  workspace 4
+bindsym $alt+5 move container to workspace 5;  workspace 5
+bindsym $alt+6 move container to workspace 6;  workspace 6
+bindsym $alt+7 move container to workspace 7;  workspace 7
+bindsym $alt+8 move container to workspace 8;  workspace 8
+bindsym $alt+9 move container to workspace 9;  workspace 9
 
 # Move focused container to next/prev workspace
-bindsym $sup+$alt+h exec $i3scripts/move-to-relative-workspace -1
-bindsym $sup+$alt+l exec $i3scripts/move-to-relative-workspace  1
+bindsym $alt+Shift+h exec $i3scripts/move-to-relative-workspace -1
+bindsym $alt+Shift+l exec $i3scripts/move-to-relative-workspace  1
 
 # Go to a new workspace
-bindsym $sup+0 exec $i3scripts/goto-next-workspace 
 bindsym $sup+n exec $i3scripts/goto-next-workspace 
 
 # workspace next_on_output
-bindsym $sup+l         workspace next_on_output 
+
+bindsym $sup+Left      exec $i3scripts/goto-ws 2 2 ← 
+bindsym $sup+Down      exec $i3scripts/goto-ws 2 2 ↓ 
+bindsym $sup+Up        exec $i3scripts/goto-ws 2 2 ↑ 
+bindsym $sup+Right     exec $i3scripts/goto-ws 2 2 → 
+
 bindsym $sup+h         workspace prev_on_output 
+bindsym $sup+j         exec $i3scripts/goto-ws 2 2 ↓ 
+bindsym $sup+k         exec $i3scripts/goto-ws 2 2 ↑ 
+bindsym $sup+l         workspace next_on_output 
 
-bindsym $sup+ccedilla  workspace back_and_forth
 
-bindsym $sup+Left  exec $i3scripts/goto-ws 2 2 ← 
-bindsym $sup+Down  exec $i3scripts/goto-ws 2 2 ↓ 
-bindsym $sup+Up    exec $i3scripts/goto-ws 2 2 ↑ 
-bindsym $sup+Right exec $i3scripts/goto-ws 2 2 → 
+bindsym $sup+ccedilla   workspace back_and_forth
+bindsym $sup+semicolon  workspace back_and_forth
 
 bindsym $sup+Shift+Right move container to output right
 bindsym $sup+Shift+Left  move container to output left
 
-# bindsym $sup+F8 exec wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen
-# bindsym $sup+F8 exec sh -c 'pgrep wl-mirror >/dev/null && pkill wl-mirror || wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen'
-# bindsym $sup+F8 exec wl-present mirror eDP-1 \
-    # --fullscreen-output HDMI-A-1 \
-    # --fullscreen \
-    # --scaling fit
-
 # Mirror laptop → projector
-# bindsym $sup+F8 exec sh -c 'swaymsg output HDMI-A-1 mode 1440x900 scale 1; wl-present mirror eDP-1 --fullscreen-output HDMI-A-1 --fullscreen --scaling fit'
 bindsym $sup+F8 exec ~/.config/sway/scripts/mirror
 
-
-
-no_focus [app_id="at.yrlf.wl_mirror"]
 
 
 
@@ -284,6 +310,11 @@ bindsym Ctrl+Escape exec i3-dmenu-desktop --dmenu='dmenu -nb black -nf white -sb
 
 
 bindsym $alt+Shift+e exec swaymsg exit
+
+# Rofi shutdown menu
+bindsym Ctrl+$alt+Delete   exec $gadgets/shutdown_menu
+bindsym XF86PowerOff       exec $gadgets/shutdown_menu
+
 
 ################################################################################
 #                                   Controls
@@ -315,16 +346,16 @@ bindsym --release Scroll_Lock     exec pkill -SIGRTMIN+11 i3blocks
 
 
 # Start a Terminal
-bindsym $alt+Return    exec xfce4-terminal
+bindsym $alt+Return    exec urxvt
 bindsym $sup+Return    exec alacritty
-bindsym $alt+Control+t exec urxvt
+bindsym $alt+Control+t exec xfce4-terminal
 bindsym $alt+F12       exec xfce4-terminal --drop-down
 
 bindsym $alt+Ctrl+r    exec $HOME/.local/bin/recents              # installed with pipx
     
-bindsym $alt+Ctrl+p exec cliphist list | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
-bindsym $alt+c      exec cliphist list | head -n 20 | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
-
+# bindsym $alt+Ctrl+p exec cliphist list | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
+# bindsym $alt+c      exec cliphist list | head -n 20 | rofi -dmenu $rofi-theme | cliphist decode | wl-copy
+bindsym $alt+Ctrl+p exec cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy
 
 
 ################################################################################
@@ -332,19 +363,17 @@ bindsym $alt+c      exec cliphist list | head -n 20 | rofi -dmenu $rofi-theme | 
 ################################################################################
 
 
-# Rofi shutdown menu
-bindsym Ctrl+$alt+Delete       exec $gadgets/shutdown_menu
-
 # Change keyboard layout
 bindsym Ctrl+space             exec $i3scripts/set-next-keyboard-layout  
+bindsym Ctrl+semicolon         exec $i3scripts/set-next-keyboard-layout  
+bindsym Ctrl+ccedilla          exec $i3scripts/set-next-keyboard-layout  
 
 bindsym Ctrl+Shift+r           exec urxvt -name rangerterm -e ranger   
-bindsym Ctrl+Shift+i           exec urxvt -name nmtuiwin -e nmtui
+bindsym Ctrl+Shift+i           exec urxvt -name nmtuiwin -e nmtui connect
 bindsym Ctrl+Shift+j split v ; exec urxvt -name codetesting ;
 
 
-# Print Screen
-# Select a region
+# Print Screen | Select a region
 bindsym $sup+Shift+4 exec sh -c 'grim -g "$(slurp)" - | wl-copy -t image/png'
 
 # Entire screen
@@ -365,7 +394,6 @@ bindsym Ctrl+Shift+w exec sh -c 'name=$(printf "" | rofi -dmenu -p "New name for
 
 bindsym $sup+r mode "$resize_mode"
 bindsym $sup+m mode "$move_mode"    focus floating
-bindsym $alt+p mode "$launch_mode" 
 bindsym $sup+g mode "$mode_gaps"
 
 
@@ -408,22 +436,6 @@ mode "$move_mode" {
     bindsym Escape mode "default"
     bindsym m      mode "default"
 	bindsym r      mode "$resize_mode"
-}
-
-
-set $launch_mode Launch: [f]irefox [c]hromium [n]autilus [t]erminal [l]eafpad [s]peedcrunch
-mode "$launch_mode" {
-	bindsym f workspace "" ; exec firefox  ;      mode "default"; 
-	bindsym c workspace "" ; exec google-chrome ; mode "default"; 
-	bindsym n workspace "" ; exec nautilus ;      mode "default"; 
-
-    bindsym t exec xfce4-terminal --role floatingterminal   ;      mode "default";  
-	bindsym l exec leafpad;                                 ;      mode "default";  
-	bindsym s exec speedcrunch                              ;      mode "default";  
-
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
-	bindsym $alt+p mode "default"
 }
 
 
@@ -480,7 +492,9 @@ mode "$mode_gaps_inner" {
 for_window [app_id="speedcrunch"]                 floating enable, resize set width 800 px height 600 px
 for_window [app_id="xdg-desktop-portal-gtk"]      floating enable, resize set width 1000 px height 600 px
 for_window [app_id="org.gnome.Nautilus"]          floating enable, resize set width 1000 px height 600 px
-for_window [app_id="google-chrome"]               gaps inner current set 0
+for_window [class="Google-chrome" instance="google-chrome"] gaps inner current set 0
+
+no_focus [app_id="at.yrlf.wl_mirror"]
 
 for_window [app_id="gsimplecal"] floating enable, move position mouse, move up 20 px
 
@@ -496,32 +510,28 @@ bar {
     # font pango:monospace, Font Awesome 5 Free Solid 10
 	font pango:Font Awesome 5 Free Solid, roboto, monospace 8
 	status_command i3blocks
-	# bindsym button4 nop
-	# bindsym button5 nop
-
-	# position top 
 
     # used to show the bar when in the invisible mode
 	modifier none 
 
     workspace_buttons yes
-    workspace_min_width 30
+    workspace_min_width 25
 
     tray_output none
 	height 16
 
 	colors {
-		# background         #2b303b80
+	  # background         #2b303b80
 		background         #00000080
 		binding_mode       #000000 #000000 #ffffff
-
-        focused_workspace  #555555ff #444444ff #ffffffff
-        active_workspace   #33333380 #33333380 #ffffff80
-        inactive_workspace #11111180 #222222d0 #88888880
-        urgent_workspace   #ff000080 #ff000080 #ffffff80
+     
+	  # workspace_type     border           background        text_color
+        # focused_workspace  #555555df        #555555df         #ffffffff
+        # inactive_workspace #111111df        #222222df         #888888ff
+        focused_workspace  #00000080        #00000080         #ffffffff
+        inactive_workspace #00000080        #00000080         #888888ff
+		active_workspace   #33333380        #33333380         #ffffff80
+        urgent_workspace   #ff000080        #ff000080         #ffffff80
 	} 
 }
-
-
-
 
